@@ -1,0 +1,43 @@
+name: Flask CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main  # Trigger the pipeline on push to main branch
+  pull_request:
+    branches:
+      - main  # Trigger the pipeline on PR creation to main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+    
+    - name: Log in to DockerHub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    
+    - name: Build Docker image
+      run: |
+        docker build -t your-dockerhub-username/flask-ci-cd-demo .
+    
+    - name: Push Docker image to DockerHub
+      run: |
+        docker push your-dockerhub-username/flask-ci-cd-demo
+    
+    - name: Run Tests (optional)
+      run: |
+        docker run --rm your-dockerhub-username/flask-ci-cd-demo pytest tests/
+
+    - name: Deploy (optional - can be to a local or remote server)
+      run: |
+        # Example deployment to your server (you can replace with your preferred method)
+        ssh user@server "docker pull your-dockerhub-username/flask-ci-cd-demo && docker-compose up -d"
