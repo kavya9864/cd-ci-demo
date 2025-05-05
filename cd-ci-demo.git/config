@@ -1,0 +1,8 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = true
+[remote "origin"]
+	url = https://github.com/kavya9864/cd-ci-demo.git
+	fetch = +refs/*:refs/*
+	mirror = true
